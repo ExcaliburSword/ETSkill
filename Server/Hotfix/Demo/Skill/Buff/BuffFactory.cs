@@ -11,7 +11,7 @@ namespace ET
             buf.BuffId = bfc.Id;
             buf.BuffLevel = bfc.Level;
             buf.MaxCount = bfc.MaxCount;
-            buf.EffectType = bfc.EffectType;
+            buf.EffectType =(BuffEffectType)bfc.EffectType;
             buf.Refresh = bfc.Refresh>0;
             buf.BaseContinueTime = bfc.BaseContinueTime;
             buf.EffectIntervalTime = bfc.IntervalTime;

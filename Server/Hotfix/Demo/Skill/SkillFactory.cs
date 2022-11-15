@@ -7,8 +7,9 @@ namespace ET
         {
             var cfg = SkillConfigCategory.Instance.Get(skillConfigId);
             Skill skill = new Skill();
-            skill.callBackSkillInTime = cfg.CallBackSkillId <= 0 ? null : CreateSkill(cfg.CallBackSkillId);
-            skill.callBackSkillInTimePer = cfg.SkillProperty / 100f;
+           // skill.callBackSkillInTime = cfg.CallBackSkillId <= 0 ? null : CreateSkill(cfg.CallBackSkillId);
+           skill.callBackSkillId = cfg.CallBackSkillId;
+            skill.callBackSkillInTimePossibility = cfg.SkillProperty;
             skill.skillId = cfg.Id;
             skill.Id = skill.skillId;
             skill.skillName = cfg.Name;
@@ -20,13 +21,13 @@ namespace ET
             skill.realizeTime = cfg.RealizeTime;
             skill.damageFormula = GetFormula(cfg.DamageFormId);
             
-            skill.skillActionInTimePer = cfg.ActionProper / 100f;
+            skill.skillActionInTimePossibility = cfg.ActionProper ;
             skill.skillActionInTime = GetSkillAction(cfg.ActionId);
             
-            skill.buffPer = cfg.BuffProper / 100f;
-            skill.buff = GetBuff(cfg.BuffId);
-            skill.targetBuffPer = cfg.TargetBuffProper / 100f;
-            skill.targetBuff = GetBuff(cfg.TargetBuffId);
+            skill.buffPossibility = cfg.BuffProper;
+            skill.buffId = cfg.BuffId;
+            skill.targetBuffPossibility = cfg.TargetBuffProper;
+            skill.targetBuffId = cfg.TargetBuffId;
             return skill;
 
         }

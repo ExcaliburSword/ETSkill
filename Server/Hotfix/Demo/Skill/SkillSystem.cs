@@ -12,15 +12,8 @@ namespace ET
     {
         public static void OnDestroy(this Skill self)
         {
-            if (self.callBackSkillInTime!=null)
-            {
-                self.callBackSkillInTime.OnDestroy();
-            }
-            self.callBackSkillInTime = null;
             self.damageFormula = null;
             self.skillActionInTime = null;
-            self.buff = null;
-            self.targetBuff = null;
         }
     }
 }

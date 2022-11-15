@@ -5,7 +5,7 @@ namespace ET
         public int BuffId;
         public int BuffLevel;
         public int MaxCount;
-        public int EffectType;
+        public BuffEffectType EffectType;
         public bool Refresh;
         public int BaseContinueTime;
         public int EffectIntervalTime;
@@ -35,10 +35,15 @@ namespace ET
 
         public SkillAction BuffEndAction1;
         public SkillAction BuffEndAction2;
+        
 
+    }
 
-
-
-
+    public enum BuffEffectType
+    {
+        Cintinue=0,
+        IntervalChange=1,
+        IntervalAction=2,
+        Trigger=3,
     }
 }

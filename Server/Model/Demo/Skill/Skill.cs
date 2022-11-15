@@ -12,14 +12,15 @@ namespace ET
         public int hpCost;
         public int XpCost;
         public Formula damageFormula;
-        public float skillActionInTimePer;
+        public int skillActionInTimePossibility;
         public SkillAction skillActionInTime;
-        public float callBackSkillInTimePer;
-        public Skill callBackSkillInTime;//技能加载依赖其他技能，先读字段确定依赖技能id，先递归加载依赖技能
-        public float buffPer;
-        public Buff buff;
-        public float targetBuffPer;
-        public Buff targetBuff;
+        public int callBackSkillInTimePossibility;
+       // public Skill callBackSkillInTime;//技能加载依赖其他技能，先读字段确定依赖技能id，先递归加载依赖技能
+       public int callBackSkillId;
+        public int buffPossibility;
+        public int buffId;
+        public int targetBuffPossibility;
+        public int targetBuffId;
 
     }
 }
