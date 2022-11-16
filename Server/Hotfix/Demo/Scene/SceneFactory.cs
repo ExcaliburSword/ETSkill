@@ -39,6 +39,7 @@ namespace ET
                     scene.AddComponent<TriggerConditionComponent>();
                     scene.AddComponent<FormulaComponent>();
                     scene.AddComponent<SkillActionComponent>();
+                    scene.AddComponent<SelectTargetComponent>();
                     scene.AddComponent<BuffComponent>();
                     scene.AddComponent<SkillComponent>();
                     break;

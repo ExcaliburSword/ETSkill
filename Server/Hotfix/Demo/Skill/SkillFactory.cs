@@ -8,8 +8,9 @@ namespace ET
             var cfg = SkillConfigCategory.Instance.Get(skillConfigId);
             Skill skill = new Skill();
            // skill.callBackSkillInTime = cfg.CallBackSkillId <= 0 ? null : CreateSkill(cfg.CallBackSkillId);
-           skill.callBackSkillId = cfg.CallBackSkillId;
+            skill.callBackSkillId = cfg.CallBackSkillId;
             skill.callBackSkillInTimePossibility = cfg.SkillProperty;
+            skill.selectType = GetSelectTarget(cfg.ChoosType);
             skill.skillId = cfg.Id;
             skill.Id = skill.skillId;
             skill.skillName = cfg.Name;
@@ -19,6 +20,7 @@ namespace ET
             skill.XpCost = cfg.XPCost;
             skill.coldTime = cfg.ColdTime;
             skill.realizeTime = cfg.RealizeTime;
+            skill.maxDistance = cfg.DamageDis;
             skill.damageFormula = GetFormula(cfg.DamageFormId);
             
             skill.skillActionInTimePossibility = cfg.ActionProper ;
@@ -58,6 +60,16 @@ namespace ET
             }
 
             return BuffComponent.Instance.GetChild<Buff>(buffId);
+        }
+
+        private static SelectTarget GetSelectTarget(int selectTypeId)
+        {
+            if (selectTypeId<=0)
+            {
+                return null;
+            }
+
+            return SelectTargetComponent.Instance.GetChild<SelectTarget>(selectTypeId);
         }
         
     }

@@ -8,6 +8,8 @@ namespace ET
         public int skillLevel;
         public float coldTime;
         public float realizeTime;
+        public int maxDistance;
+        public SelectTarget selectType;
         public int mpCost;
         public int hpCost;
         public int XpCost;

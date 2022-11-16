@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Collections.Generic;
 
 namespace ET
@@ -30,11 +31,10 @@ namespace ET
         {
             self.coldTimeLeft = 0;
             self.prepareTimeAlready = 0;
-            if ( self.skillTargets ==null)
+            if ( self.skillTargets !=null)
             {
-                self.skillTargets = new List<Unit>();
+                  ArrayPool<Unit>.Shared.Return(self.skillTargets);
             }
-            self.skillTargets.Clear();
         }
     }
 }

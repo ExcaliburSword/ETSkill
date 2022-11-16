@@ -1,4 +1,6 @@
 using System;
+using System.Buffers;
+using UnityEngine;
 
 namespace ET
 {
@@ -7,9 +9,17 @@ namespace ET
     [FriendClassAttribute(typeof(ET.SkillAction))]
     [FriendClassAttribute(typeof(ET.Formula))]
     [FriendClassAttribute(typeof(ET.Property))]
+    [FriendClassAttribute(typeof(ET.SelectTarget))]
     public static class SkillRealizeManagerSystem
     {
-        public static void TryToRealizeSkill(this SkillRealizeManager self, int skillId)
+        /// <summary>
+        /// 接受玩家的释放技能请求后，尝试释放技能
+        /// </summary>
+        /// <param name="self">玩家身上的技能释放器</param>
+        /// <param name="skillId">技能id</param>
+        /// <param name="selectedTarget">玩家发出释放命令时选中的目标</param>
+        /// <param name="MousePosition">玩家发出释放命令时鼠标指向的地面坐标</param>
+        public static void TryToRealizeSkill(this SkillRealizeManager self, int skillId,Unit selectedTarget,Vector3 MousePosition)
         {
             //TODO 判断玩家自身状态是否可以使用技能（被控制等）
 
@@ -20,12 +30,12 @@ namespace ET
                 Log.Debug($"该角色没有技能{skillId}");
                 return;
             }
-
+            var skillEntity = skillState.skillEntity;
             var ownerProperty = skillState.SkillOwner.GetComponent<Property>();
             //判断玩家是否可以支撑该技能的消耗，MP等
-            if (ownerProperty.Mp < skillState.skillEntity.mpCost
-                || ownerProperty.Hp < skillState.skillEntity.hpCost
-                || ownerProperty.Xp < skillState.skillEntity.XpCost)
+            if (ownerProperty.Mp < skillEntity.mpCost
+                || ownerProperty.Hp < skillEntity.hpCost
+                || ownerProperty.Xp < skillEntity.XpCost)
             {
                 Log.Debug("MP/hp/xp值不足，不能释放技能");
                 return;
@@ -37,17 +47,49 @@ namespace ET
                 Log.Debug("技能尚未冷却完毕,现在不能释放");
                 return;
             }
-            //TODO 选择技能作用目标列表
+            //判断该技能是否可以对当前目标释放
+            //有选中目标时，以选中目标判断距离。没有选中目标时，以鼠标指向的点的坐标判断距离
+            if (selectedTarget!=null)
+            {
+                var distanceSquared = Vector3.DistanceSquared(selectedTarget.Position, skillState.SkillOwner.Position);
+                if (distanceSquared>skillEntity.maxDistance*skillEntity.maxDistance)
+                {
+                    Log.Debug("释放距离超出限制，不能释放");
+                    return;
+                }
+            }
+            else
+            {
+                var distanceSquared = Vector3.DistanceSquared(MousePosition, skillState.SkillOwner.Position);
+                if (distanceSquared>skillEntity.maxDistance*skillEntity.maxDistance)
+                {
+                    Log.Debug("释放距离超出限制，不能释放");
+                    return;
+                }
+            }
+            
+            // 选择技能作用目标列表
+            skillState.skillTargets = skillEntity.selectType.Select(skillState.SkillOwner,skillEntity,selectedTarget,MousePosition);
 
-            //TODO 判断该技能是否可以对当前目标使用
+            
 
 
             //TODO 开始准备，到准备时间达到技能需要的准备时间，技能生效
 
-            self.RealizeSkill(skillState);
+            if (true)
+            {
+                self.RealizeSkill(skillState,selectedTarget,MousePosition);
+            }
+            /*
+            else
+            {
+                ArrayPool<Unit>.Shared.Return(skillState.skillTargets);
+            }
+            */
+
         }
 
-        private static void RealizeSkill(this SkillRealizeManager self, SkillState skillState)
+        private static void RealizeSkill(this SkillRealizeManager self, SkillState skillState,Unit selectedTarget,Vector3 MousePosition)
         {
             var ownerProperty = skillState.SkillOwner.GetComponent<Property>();
             //扣除消耗
@@ -56,7 +98,7 @@ namespace ET
             ownerProperty.Xp -= skillState.skillEntity.XpCost;
             //进入冷却计算
             skillState.coldTimeLeft = skillState.skillEntity.coldTime;
-            //造成生命值变换
+            //造成生命值变化
             if (skillState.skillEntity.damageFormula != null)
             {
                 foreach (var target in skillState.skillTargets)
@@ -71,26 +113,26 @@ namespace ET
             {
                 if (Random.Shared.Next(1, 100) <= skillState.skillEntity.callBackSkillInTimePossibility)
                 {
-                    self.TryToRealizeSkill(skillState.skillEntity.callBackSkillId);
+                    self.TryToRealizeSkill(skillState.skillEntity.callBackSkillId,selectedTarget,MousePosition);
                 }
             }
             //施加自身buff
-            if (skillState.skillEntity.buffPossibility>0 && skillState.skillEntity.buffId>0)
+            if (skillState.skillEntity.buffPossibility > 0 && skillState.skillEntity.buffId > 0)
             {
-                if (Random.Shared.Next(1,100)<=skillState.skillEntity.buffPossibility)
+                if (Random.Shared.Next(1, 100) <= skillState.skillEntity.buffPossibility)
                 {
-                    AddBuff(skillState.SkillOwner, skillState.SkillOwner,skillState.skillEntity.buffId);
+                    AddBuff(skillState.SkillOwner, skillState.SkillOwner, skillState.skillEntity.buffId);
                 }
             }
             //施加目标buff
-            if (skillState.skillEntity.targetBuffPossibility > 0 && skillState.skillEntity.targetBuffId>0)
+            if (skillState.skillEntity.targetBuffPossibility > 0 && skillState.skillEntity.targetBuffId > 0)
             {
 
                 foreach (var target in skillState.skillTargets)
                 {
                     if (Random.Shared.Next(1, 100) <= skillState.skillEntity.targetBuffPossibility)
                     {
-                        AddBuff(target, skillState.SkillOwner,skillState.skillEntity.buffId);
+                        AddBuff(target, skillState.SkillOwner, skillState.skillEntity.buffId);
                     }
                 }
             }
@@ -106,14 +148,16 @@ namespace ET
                     }
                 }
             }
+            //回收目标列表
+            ArrayPool<Unit>.Shared.Return(skillState.skillTargets);
         }
 
         private static void AddBuff(Unit target, Unit ori, int buffId)
         {
             var buffstateComponent = target.GetComponent<BuffStateComponent>();
-            if (buffstateComponent!=null)
+            if (buffstateComponent != null)
             {
-                buffstateComponent.AddBuff(ori,buffId);
+                buffstateComponent.AddBuff(ori, buffId);
             }
         }
     }

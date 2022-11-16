@@ -20,7 +20,7 @@ namespace ET
         }
         public float coldTimeLeft;//剩余冷却时间
         public float prepareTimeAlready;//已经准备时间
-        public List<Unit> skillTargets; //技能目标列表
+        public Unit[] skillTargets; //技能目标列表
 
     }
 }

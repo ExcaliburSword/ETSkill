@@ -14,7 +14,7 @@ namespace ET
         public static void LoadTriggerConditions(this TriggerConditionComponent self)
         {
             TriggerConditionFactory.CreateTriggerCondition(1);
-            Log.Debug("加载triggercondition完成");
+            Log.Debug("triggercondition加载完成");
         }
     }
 }
