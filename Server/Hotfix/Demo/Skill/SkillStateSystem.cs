@@ -19,6 +19,7 @@ namespace ET
         }
     }
     [FriendClassAttribute(typeof(ET.SkillState))]
+    [FriendClassAttribute(typeof(ET.Skill))]
     public static class SkillStateSystem
     {
         public static void InitStateWithId(this SkillState self, int skillId)
@@ -29,11 +30,11 @@ namespace ET
 
         public static void InitState(this SkillState self)
         {
-            self.coldTimeLeft = 0;
+            self.coldTimeLeft = self.skillEntity.coldTime;
             self.prepareTimeAlready = 0;
-            if ( self.skillTargets !=null)
+            if (self.skillTargets != null)
             {
-                  ArrayPool<Unit>.Shared.Return(self.skillTargets);
+                ArrayPool<Unit>.Shared.Return(self.skillTargets);
             }
         }
     }

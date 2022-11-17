@@ -19,7 +19,7 @@ namespace ET
         /// <param name="skillId">技能id</param>
         /// <param name="selectedTarget">玩家发出释放命令时选中的目标</param>
         /// <param name="MousePosition">玩家发出释放命令时鼠标指向的地面坐标</param>
-        public static void TryToRealizeSkill(this SkillRealizeManager self, int skillId,Unit selectedTarget,Vector3 MousePosition)
+        public async static void TryToRealizeSkill(this SkillRealizeManager self, int skillId,Unit selectedTarget,Vector3 MousePosition)
         {
             //TODO 判断玩家自身状态是否可以使用技能（被控制等）
 
@@ -71,24 +71,32 @@ namespace ET
             // 选择技能作用目标列表
             skillState.skillTargets = skillEntity.selectType.Select(skillState.SkillOwner,skillEntity,selectedTarget,MousePosition);
 
-            
-
-
-            //TODO 开始准备，到准备时间达到技能需要的准备时间，技能生效
-
-            if (true)
+            // 开始准备，每50ms检测一次是否打断，如果没被打断，则释放，打断则直接返回
+            int checkTimes = (int)skillEntity.realizeTime / 50;
+            for (int i = 0; i < checkTimes; i++)
             {
-                self.RealizeSkill(skillState,selectedTarget,MousePosition);
+                if (BreakSkill(skillId))
+                {
+                    skillState.InitState();
+                    return;
+                }
+                await TimerComponent.Instance.WaitAsync(50);
             }
-            /*
-            else
-            {
-                ArrayPool<Unit>.Shared.Return(skillState.skillTargets);
-            }
-            */
-
+            self.RealizeSkill(skillState,selectedTarget,MousePosition);
         }
 
+        private static bool BreakSkill(int skillId)
+        {
+            if (true )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+          
+        }
         private static void RealizeSkill(this SkillRealizeManager self, SkillState skillState,Unit selectedTarget,Vector3 MousePosition)
         {
             var ownerProperty = skillState.SkillOwner.GetComponent<Property>();
@@ -96,8 +104,7 @@ namespace ET
             ownerProperty.Mp -= skillState.skillEntity.mpCost;
             ownerProperty.Hp -= skillState.skillEntity.hpCost;
             ownerProperty.Xp -= skillState.skillEntity.XpCost;
-            //进入冷却计算
-            skillState.coldTimeLeft = skillState.skillEntity.coldTime;
+  
             //造成生命值变化
             if (skillState.skillEntity.damageFormula != null)
             {
@@ -148,8 +155,7 @@ namespace ET
                     }
                 }
             }
-            //回收目标列表
-            ArrayPool<Unit>.Shared.Return(skillState.skillTargets);
+            skillState.InitState();
         }
 
         private static void AddBuff(Unit target, Unit ori, int buffId)
