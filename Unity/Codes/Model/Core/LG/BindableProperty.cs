@@ -5,8 +5,7 @@ namespace ET.LG
     public class BindableProperty<T> where T: IEquatable<T>
     {
       
-        public T tempValue;
-
+        private T tempValue;
         public T Value
         {
             get
@@ -18,10 +17,33 @@ namespace ET.LG
                 this.OnSetValue?.Invoke(value);
             }
         }
-        public Func<T> OnGetValue;
-        public Action<T> OnSetValue;
+        private Func<T> OnGetValue;
+        private Action<T> OnSetValue;
         
-        public double GetDouble() 
+        public BindableProperty<T> RegistGet(Func<T> f)
+        {
+            this.OnGetValue = f;
+            return this;
+        }
+
+        public BindableProperty<T> RegistSet(Action<T> a)
+        {
+            this.OnSetValue = a;
+            return this;
+        }
+
+        public BindableProperty<T> UnRegistGet(Func<T> f)
+        {
+            this.OnGetValue -= f;
+            return this;
+        }
+
+        public BindableProperty<T> UnRegistSet(Action<T> a)
+        {
+            this.OnSetValue -= a;
+            return this;
+        }
+        public double GetTempValueAsDouble() 
         {
             double d = 1;
             switch (this)
@@ -54,12 +76,11 @@ namespace ET.LG
                     d = db.tempValue;
                     break;
                 default:
-                    Log.Debug("不是指定的数值类型，请添加");
-                    break;
+                    throw new Exception("预期之外的类型，不是预设的数值类型");
             }
             return d;
         }
-        public void SetMValue(double d) 
+        public void SetTempValue(double d) 
         {
             switch (this)
             {
@@ -91,14 +112,18 @@ namespace ET.LG
                     db.tempValue = d;
                     break;
                 default:
-                    Log.Debug("不是指定的数值类型，请添加");
-                    break;
+                    throw new Exception("预期之外的类型，不是预设的数值类型");
             }
         }
 
-        public void SetMValue(T v)
+        public void SetTempValue(T v)
         {
             this.tempValue = v;
+        }
+
+        public T GetTempValue()
+        {
+            return this.tempValue;
         }
     }
 
@@ -106,33 +131,26 @@ namespace ET.LG
     {
         public static int OnGet_Normal_int(this BindableProperty<int> self) 
         {
-            return self.tempValue;
+            return self.GetTempValue();
         }
 
         public static T OnGet_Over0<T>(this BindableProperty<T> self) where T : IEquatable<T>
         {
-            double d = self.GetDouble();
+            double d = self.GetTempValueAsDouble();
             if (d<0)
             {
-                self.SetMValue(0);
+                self.SetTempValue(0);
             }
-            return self.tempValue;
+            return self.GetTempValue();
         }
- 
-
-        public static void OnSet_Normal_int(this BindableProperty<int> self, int v)
+        
+        public static void OnSet_LeftBigger<T>(this BindableProperty<T> self, T v) where T: IEquatable<T>
         {
-            self.tempValue = v;
-        }
-
-     
-        public static void OnSet_LeftBigger_int<T>(this BindableProperty<T> self, T v) where T: IEquatable<T>
-        {
-            double d = self.GetDouble();
+            double d = self.GetTempValueAsDouble();
             double v0 = ChangeToDouble(v);
             if (v0>d)
             {
-                self.tempValue = v;
+                self.SetTempValue(v);
             }
         }
         private static double ChangeToDouble<T>(T v)
@@ -168,8 +186,7 @@ namespace ET.LG
                     d = db;
                     break;
                 default:
-                    Log.Debug("不是指定的数值类型，请添加");
-                    break;
+                    throw new Exception("预期之外的类型，不是预设的数值类型");
             }
             return d;
         }

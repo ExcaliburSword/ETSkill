@@ -1,5 +1,6 @@
 using System;
 using System.Buffers;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace ET
@@ -37,14 +38,14 @@ namespace ET
                 || ownerProperty.Hp < skillEntity.hpCost
                 || ownerProperty.Xp < skillEntity.XpCost)
             {
-                Log.Debug("MP/hp/xp值不足，不能释放技能");
+                Log.Debug($"MP/hp/xp值不足，不能释放技能 {skillEntity.skillName} ");
                 return;
             }
 
             //检查技能冷却时间
             if (skillState.coldTimeLeft > 0)
             {
-                Log.Debug("技能尚未冷却完毕,现在不能释放");
+                Log.Debug($"技能尚未冷却完毕,现在不能释放 {skillEntity.skillName} ");
                 return;
             }
             //判断该技能是否可以对当前目标释放
@@ -54,7 +55,7 @@ namespace ET
                 var distanceSquared = Vector3.DistanceSquared(selectedTarget.Position, skillState.SkillOwner.Position);
                 if (distanceSquared>skillEntity.maxDistance*skillEntity.maxDistance)
                 {
-                    Log.Debug("释放距离超出限制，不能释放");
+                    Log.Debug($"释放距离超出限制，不能释放 {skillEntity.skillName} ");
                     return;
                 }
             }
@@ -63,7 +64,7 @@ namespace ET
                 var distanceSquared = Vector3.DistanceSquared(MousePosition, skillState.SkillOwner.Position);
                 if (distanceSquared>skillEntity.maxDistance*skillEntity.maxDistance)
                 {
-                    Log.Debug("释放距离超出限制，不能释放");
+                    Log.Debug($"释放距离超出限制，不能释放 {skillEntity.skillName} ");
                     return;
                 }
             }
@@ -72,30 +73,35 @@ namespace ET
             skillState.skillTargets = skillEntity.selectType.Select(skillState.SkillOwner,skillEntity,selectedTarget,MousePosition);
 
             // 开始准备，每50ms检测一次是否打断，如果没被打断，则释放，打断则直接返回
+            var tempState = skillState.SkillOwner.GetComponent<CharactorTempState>();
+            if (tempState==null)
+            {
+                Log.Debug($"无法获取到临时状态，不能继续释放技能 {skillEntity.skillName} ");
+            }
+            
             int checkTimes = (int)skillEntity.realizeTime / 50;
             for (int i = 0; i < checkTimes; i++)
             {
-                if (BreakSkill(skillId))
+                if (BreakSkill(skillId,tempState))
                 {
+                    Log.Debug($"技能 {skillEntity.skillName} 被打断");
                     skillState.InitState();
                     return;
                 }
-                await TimerComponent.Instance.WaitAsync(50);
+                await Task.Delay(50);
+               // await TimerComponent.Instance.WaitAsync(50);
             }
             self.RealizeSkill(skillState,selectedTarget,MousePosition);
         }
 
-        private static bool BreakSkill(int skillId)
+        private static bool BreakSkill(int skillId,CharactorTempState ts)
         {
-            if (true )
+            //这里没用skillId的原因是，没有使用skill的配置来决定判断打断的条件。如果需要根据具体的skill来判断打断的方式，则需要skillId了
+            if (ts.ifMoved||ts.ifCantUseSkill)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
-          
+            return false;
         }
         private static void RealizeSkill(this SkillRealizeManager self, SkillState skillState,Unit selectedTarget,Vector3 MousePosition)
         {
@@ -155,6 +161,7 @@ namespace ET
                     }
                 }
             }
+            Log.Debug($"成功释放了技能 {skillState.skillEntity.skillName} ");
             skillState.InitState();
         }
 
