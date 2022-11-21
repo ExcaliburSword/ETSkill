@@ -35,6 +35,14 @@ namespace ET
 			unit.AddComponent<AOIEntity, int, Vector3>(9 * 1000, unit.Position);
 
 			response.NewInstanceId = unit.InstanceId;
+			unit.AddComponent<Property>();//属性
+			unit.AddComponent<CharactorTempState>();//临时状态
+			unit.AddComponent<SkillStateComponent>();//拥有的技能列表
+			unit.AddComponent<SkillRealizeManager>();//技能释放器
+			unit.AddComponent<ContinueBuffComponent>();//持续buff管理
+			unit.AddComponent<IntervalActionBuffComponent>();//间隔效果buff管理
+			unit.AddComponent<IntervalChangeBuffComponent>();//间隔属性变化buff管理
+			unit.AddComponent<TriggerBuffComponent>();//触发效果buff管理
 			
 			reply();
 		}

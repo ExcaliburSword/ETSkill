@@ -13,8 +13,10 @@ namespace ET
     {
         public static void LoadSelectTargets(this SelectTargetComponent self)
         {
-            int selectTypeId = 1;
-            SelectTargetFactory.CreateSelectTarget(selectTypeId);
+            for (int selectTypeId = 1; selectTypeId <= 4; selectTypeId++)
+            {
+                SelectTargetFactory.CreateSelectTarget(selectTypeId);
+            }
             Log.Debug("SelectTarget加载完成");
         }
     }

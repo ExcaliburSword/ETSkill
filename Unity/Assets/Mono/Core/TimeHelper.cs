@@ -33,6 +33,8 @@ namespace ET
             return TimeInfo.Instance.ServerNow();
         }
 
+        public static long DeltaTimeMilliSecond=>TimeInfo.Instance.FrameTime-TimeInfo.Instance.PreTime;
+        public static float DeltaTimeSecond => DeltaTimeMilliSecond / 1000f;
         public static long ClientFrameTime()
         {
             return TimeInfo.Instance.ClientFrameTime();

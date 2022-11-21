@@ -548,4 +548,47 @@ namespace ET
 
 	}
 
+	[ResponseType(nameof(M2C_UseSkill))]
+	[Message(OuterOpcode.C2M_UseSkill)]
+	[ProtoContract]
+	public partial class C2M_UseSkill: Object, IRequest
+	{
+		[ProtoMember(90)]
+		public int RpcId { get; set; }
+
+		[ProtoMember(1)]
+		public long PlayerId { get; set; }
+
+		[ProtoMember(2)]
+		public int SkillId { get; set; }
+
+		[ProtoMember(3)]
+		public long TargetId { get; set; }
+
+		[ProtoMember(4)]
+		public float TargetPosX { get; set; }
+
+		[ProtoMember(5)]
+		public float TargetPosY { get; set; }
+
+		[ProtoMember(6)]
+		public float TargetPosZ { get; set; }
+
+	}
+
+	[Message(OuterOpcode.M2C_UseSkill)]
+	[ProtoContract]
+	public partial class M2C_UseSkill: Object, IResponse
+	{
+		[ProtoMember(90)]
+		public int RpcId { get; set; }
+
+		[ProtoMember(91)]
+		public int Error { get; set; }
+
+		[ProtoMember(92)]
+		public string Message { get; set; }
+
+	}
+
 }

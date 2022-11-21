@@ -18,8 +18,9 @@ namespace ET
                 return this._skillOwner;
             }
         }
-        public float coldTimeLeft;//剩余冷却时间
-        public float prepareTimeAlready;//已经准备时间
+        public int coldTimeLeft;//剩余冷却时间,ms
+        public bool preparing = false;//是否正在准备技能
+        public int prepareTimeAlready;//已经准备时间,ms
         public Unit[] skillTargets; //技能目标列表
 
     }

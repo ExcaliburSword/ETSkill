@@ -265,3 +265,23 @@ message R2C_Test02 // IMessage
 {
 	string Bye = 1;
 }
+
+//ResponseType M2C_UseSkill
+message C2M_UseSkill // IRequest
+{
+ int32 RpcId = 90;
+ int64 PlayerId = 1;
+ int32 SkillId = 2;
+ int64 TargetId = 3;
+ float TargetPosX = 4;
+ float TargetPosY = 5;
+ float TargetPosZ = 6;
+}
+
+message M2C_UseSkill // IResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+
+}

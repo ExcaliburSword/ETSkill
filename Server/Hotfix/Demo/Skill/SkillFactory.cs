@@ -11,6 +11,7 @@ namespace ET
             skill.callBackSkillId = cfg.CallBackSkillId;
             skill.callBackSkillInTimePossibility = cfg.SkillProperty;
             skill.selectType = GetSelectTarget(cfg.ChoosType);
+            skill.maxEffectNum = cfg.EffectTrgetNum;
             skill.skillId = cfg.Id;
             skill.Id = skill.skillId;
             skill.skillName = cfg.Name;

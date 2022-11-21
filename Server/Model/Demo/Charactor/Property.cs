@@ -1,16 +1,16 @@
 namespace ET
 {
     [ComponentOf(typeof(Unit))]
-    public class Property: Entity
+    public class Property: Entity, IAwake
     {
         public int Level;
         public int EXP;
-        public int HpMax;
-        public int MpMax;
-        public int XpMax;
-        public int Hp;
-        public int Mp;
-        public int Xp;
+        public int HpMax=1000;
+        public int MpMax=1000;
+        public int XpMax=1000;
+        public int Hp=1000;
+        public int Mp=1000;
+        public int Xp=1000;
         public int HpRecover;
         public int MpRecover;
         public int MoveSpeed;

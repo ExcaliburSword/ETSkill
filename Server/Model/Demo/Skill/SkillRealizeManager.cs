@@ -1,7 +1,7 @@
 namespace ET
 {
     [ComponentOf(typeof(Unit))]
-    public class SkillRealizeManager: Entity
+    public class SkillRealizeManager: Entity ,IAwake
     {
         private SkillStateComponent _skillStateComponent;
         public SkillStateComponent skillStateComponent

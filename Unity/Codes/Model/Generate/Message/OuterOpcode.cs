@@ -36,5 +36,7 @@ namespace ET
 		 public const ushort R2C_Test01 = 10033;
 		 public const ushort C2R_Test02 = 10034;
 		 public const ushort R2C_Test02 = 10035;
+		 public const ushort C2M_UseSkill = 10036;
+		 public const ushort M2C_UseSkill = 10037;
 	}
 }

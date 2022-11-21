@@ -6,10 +6,11 @@ namespace ET
         public  int skillId;
         public string skillName;
         public int skillLevel;
-        public float coldTime;
-        public float realizeTime;
-        public int maxDistance;
+        public int coldTime;
+        public int realizeTime;
+        public int maxDistance;//技能最大释放距离
         public SelectTarget selectType;
+        public int maxEffectNum;//最大作用目标数目
         public int mpCost;
         public int hpCost;
         public int XpCost;

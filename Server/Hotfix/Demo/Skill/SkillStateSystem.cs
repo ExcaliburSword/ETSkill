@@ -32,9 +32,23 @@ namespace ET
         {
             self.coldTimeLeft = self.skillEntity.coldTime;
             self.prepareTimeAlready = 0;
+            self.preparing = false;
             if (self.skillTargets != null)
             {
                 ArrayPool<Unit>.Shared.Return(self.skillTargets);
+            }
+        }
+
+        public static void ChangeTime(this SkillState self, int deltaTime)
+        {
+            if (self.preparing)
+            {
+                self.prepareTimeAlready += deltaTime;
+            }
+
+            if (self.coldTimeLeft>0)
+            {
+                self.coldTimeLeft -= deltaTime;
             }
         }
     }

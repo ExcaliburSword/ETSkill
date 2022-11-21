@@ -27,6 +27,7 @@ namespace ET
         public long ServerMinusClientTime { private get; set; }
 
         public long FrameTime;
+        public long PreTime;
 
         private TimeInfo()
         {
@@ -35,6 +36,7 @@ namespace ET
 
         public void Update()
         {
+            this.PreTime = this.FrameTime;
             this.FrameTime = this.ClientNow();
         }
         

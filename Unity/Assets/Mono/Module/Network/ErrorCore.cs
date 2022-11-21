@@ -57,6 +57,18 @@
 
         public const int ERR_Cancel = 200001;
 
+
+        public const int ERR_SkillSuccess = 0;
+        public const int ERR_HasNoSkill = 201001;
+        public const int ERR_SkillCostNotEnough = 201002;
+        public const int ERR_BanSkillArea = 201003;
+        public const int ERR_BeSilenced = 201004;
+        public const int ERR_CantUseTarget = 201005;
+        public const int ERR_OutOfSkillRange = 201006;
+        public const int ERR_SkillColding = 201007;
+        public const int ERR_LosePlayerInfo = 201008;
+        public const int ERR_SkillBroken = 201009;
+        
         public static bool IsRpcNeedThrowException(int error)
         {
             if (error == 0)

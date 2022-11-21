@@ -16,6 +16,7 @@ namespace ET
            foreach (var skillid in skillDic.Keys)
            {
                self.AddChild(SkillFactory.CreateSkill(skillid));
+               Log.Debug($"Skill{skillid}加载完成");
            }
            Log.Debug("Skill加载完成");
         }
