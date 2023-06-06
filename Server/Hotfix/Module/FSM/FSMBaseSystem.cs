@@ -1,24 +1,27 @@
 using System.Linq;
+using UnityEngine;
 
 namespace ET
 {
-    public class FSMBaseAwakeSystem: AwakeSystem<FSMBase,EFSMStateID>
+    [FriendClassAttribute(typeof(ET.FSMState))]
+    public class FSMBaseAwakeSystem : AwakeSystem<FSMBase, EFSMStateID>
     {
 
         public override void Awake(FSMBase self, EFSMStateID stateID)
         {
             foreach (var state in self.states)
             {
-                if ( state.StateID==stateID)
+                if (state.StateID == stateID)
                 {
                     self.currentState = state;
                     break;
                 }
             }
-                  
+
         }
     }
-
+    [FriendClassAttribute(typeof(ET.FSMBase))]
+    [FriendClassAttribute(typeof(ET.FSMState))]
     public static class FSMBaseSystem
     {
         public static void ChangeActiveState(this FSMBase self, EFSMStateID stateID)

@@ -1,7 +1,7 @@
 namespace ET
 {
     /*
-     * 召唤一个跟踪目标的子弹
+     * 发射一颗跟踪目标的子弹
      */
     [SkillAction]
     public class SkillAction500: ISkillAction

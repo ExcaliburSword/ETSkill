@@ -45,4 +45,8 @@
     <ProjectReference Include="..\..\Tools\Analyzer\Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Model\Server.Model.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Demo\Skill\Summon\SummonAI" />
+    <Folder Include="Demo\Skill\Summon\Summons" />
+  </ItemGroup>
 </Project>

@@ -35,7 +35,7 @@ namespace ET
 			unit.AddComponent<AOIEntity, int, Vector3>(9 * 1000, unit.Position);
 
 			response.NewInstanceId = unit.InstanceId;
-			unit.AddComponent<Property>();//属性
+			unit.AddComponent<Property>();//角色属性
 			unit.AddComponent<CharactorTempState>();//临时状态
 			unit.AddComponent<SkillStateComponent>();//拥有的技能列表
 			unit.AddComponent<SkillRealizeManager>();//技能释放器

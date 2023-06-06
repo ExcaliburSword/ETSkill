@@ -15,8 +15,9 @@ namespace ET
             self.Owner = null;
         }
     }
+    [FriendClassAttribute(typeof(ET.SummonTag))]
     public static class SummonTagSystem
     {
-        
+      
     }
 }
